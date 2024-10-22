@@ -35,8 +35,6 @@ spec:
         - name: prometheus-config
           configMap:
             name: prometheus-configmap
-            # 110100100 rw-r--r--
-            defaultMode: 420
         - name: prometheus-data
           persistentVolumeClaim:
             claimName: prometheus-pvc
