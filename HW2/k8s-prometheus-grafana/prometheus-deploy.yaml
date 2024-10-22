@@ -19,6 +19,7 @@ spec:
       containers:
         - name: prometheus
           image: prom/prometheus:v2.55.0
+          # needed to mount path to /prometheus, otherwise there is an error msg="Error opening query log file" file=/prometheus/queries.active err="open /prometheus/queries.active: permission denied"
           securityContext:
             allowPrivilegeEscalation: false
             runAsUser: 0
