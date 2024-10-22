@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.55.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsUser: 0
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - mountPath: /etc/prometheus
+              name: prometheus-config
+            - mountPath: /prometheus
+              name: prometheus-data
+      restartPolicy: Always
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-configmap
+            # 110100100 rw-r--r--
+            defaultMode: 420
+        - name: prometheus-data
+          persistentVolumeClaim:
+            claimName: prometheus-pvc
